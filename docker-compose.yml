@@ -1,0 +1,34 @@
+
+version: "3"
+services:
+  web:
+    build: ./web
+    environment:
+      - MEDIASOUP_WS="wss://mediasoup.dpulpeiro.xyz/mediasoup"
+    networks:
+      - nginx
+
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+    ports:
+      - "8888:80"
+  server:
+    build: ./server
+    environment:
+      - ANNOUNCED_IP=mediasoup.dpulpeiro.xyz
+      - ORIGIN=https://webrtc.dpulpeiro.xyz
+    networks:
+      - nginx
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "3000:3000"
+      - "2000-2020:2000-2020"
+networks:
+  nginx:
+    external:
+      name: "nginx"
+
